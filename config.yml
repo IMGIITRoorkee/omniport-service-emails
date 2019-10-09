@@ -1,8 +1,8 @@
 nomenclature:
-  name: email
-  verboseName: Email
+  name: emails
+  verboseName: Emails
 description: An app for Omniport that does what apps do
 baseUrls:
-  http: email/
-  static: email/
+  http: emails/
+  static: emails/
 isApi: true

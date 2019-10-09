@@ -1,9 +1,9 @@
 from django.urls import path
 
-from email.views.hello_world import HelloWorld
+from emails.views.subscription import Subscription
 
-app_name = 'email'
+app_name = 'emails'
 
 urlpatterns = [
-    path('', HelloWorld.as_view(), name='hello_world'),
+    path('', Subscription.as_view()),
 ]
