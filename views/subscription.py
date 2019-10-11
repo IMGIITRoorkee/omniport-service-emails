@@ -18,10 +18,6 @@ class Subscription(APIView):
     
     def post(self, request, *args, **kwargs):
       
-        roots = Category.objects.root_nodes()
-        serializer = SubscriptionTreeSerializer(roots, many=True)
-        return Response(serializer.data)
-
         try:
             new_subscriptions = request.data['save']
             new_unsubscription = request.data['delete']

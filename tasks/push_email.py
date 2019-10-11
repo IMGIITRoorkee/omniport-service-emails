@@ -8,4 +8,4 @@ from django.core.mail import EmailMessage
         retry_kwargs={'max_retries': 5}
 )
 def qpush(EmailMessage):
-    EmailMessage.send
+    EmailMessage.send()

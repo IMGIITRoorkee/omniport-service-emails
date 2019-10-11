@@ -1,17 +1,21 @@
 from django.core.mail import EmailMessage
+from omniport.settings import settings
 
 from categories.redisdb import Subscription
-
+from emails.tasks.push_email import qpush
 
 def email_push(
         subject,
         body,
         category,
-        title,
         by,
         has_custom_user_target=False,
         persons=None,
         ):
+
+    """
+    Todo: fetch emails for persons, fetch email_from
+    """
 
     if has_custom_user_targets:
         if persons is None:
@@ -20,12 +24,12 @@ def email_push(
                 'is True '
             )
         else:
-           " email_from = settings.EMAIL_HOST_USER"
-            html_content = "body_here"
-            html_content.replace("body_here",body)
+            email_from = settings.EMAIL_HOST_USER
+            """html_content = "body_here"
+            html_content.replace("body_here",body)"""
             msg = EmailMessage(
                     subject=subject,
-                    html_content=html_content,
+                    body=body,
                     email_from=email_from,
                     persons=persons
             )
