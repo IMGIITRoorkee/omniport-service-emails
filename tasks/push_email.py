@@ -1,6 +1,8 @@
 from categories.redisdb import Subscription
 from omniport.celery import celery_app
-from django.core.mail import send_mail
+from django.core.mail import send_mass_mail
+from django.core.mail import EmailMessage
+
 @celery_app.task(
         queue='celery',
         autoretry_for=(Exception,),
@@ -16,6 +18,9 @@ def email_push(
         persons=None,
         ):
 
+
+
+
     if has_custom_user_targets:
         if persons is None:
             raise ValueError(
@@ -23,10 +28,21 @@ def email_push(
                 'is True '
             )
         else:
-            send_mail(subject, body, by, persons)
+    """
+    Todo: Process body to html_content
+          fetch email_from
+    """
+           " email_from = settings.EMAIL_HOST_USER"
+            html_content = "body_here"
+            html_content.replace("body_here",body)
+            msg = EmailMessage(subject, html_content, email_from, persons)
+            msg.content_subtype = "html"
+            msg.send()
 
-
+    """
+    Todo: fetch email_id for persons
+    """
     else:
         category = category.slug
         persons = Subscription.fetch_people(category_slug=category, action='email')
-        send_mail(subject, body, by, persons)
+        send_mass_mail(subject, body, by, persons)
