@@ -1,3 +1,3 @@
-# Email
+# Emails
 
 > Omniport app backend
