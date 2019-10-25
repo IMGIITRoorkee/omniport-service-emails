@@ -1,5 +1,8 @@
 # Compiled .pyc files
 __pycache__/
-
+logo.svg
+logo_192.png
+samp.py
+ptest.py
 # Vim swap files
 *.sw*
