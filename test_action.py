@@ -7,7 +7,7 @@ from emails.tasks.push_email import qpush
 from emails.html_content import html_content
 
 def email_push(
-        subject,
+        subject
         ):
         em = Emails()
         msg = EmailMessage(
@@ -18,6 +18,5 @@ def email_push(
         )
         msg.content_subtype = "html"
         msg.mixed_subtype = "related"
-        msg.attach('logo_192.png', 'image/png')
         qpush(msg)
 

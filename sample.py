@@ -1,4 +1,3 @@
-html_content = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -101,4 +100,4 @@ html_content = """
 	</html>
 
 
-"""
+
