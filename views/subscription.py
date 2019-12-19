@@ -50,4 +50,3 @@ class Subscription(APIView):
             },
             status=200
         )
-

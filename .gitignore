@@ -4,5 +4,7 @@ logo.svg
 logo_192.png
 samp.py
 ptest.py
+test_action.py
+q.py
 # Vim swap files
 *.sw*

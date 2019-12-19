@@ -1,7 +1,7 @@
 from django.urls import path
 
-from emails.views import Subscription, HelloWorld
-
+from emails.views.subscription import Subscription
+from emails.views.hello_world import HelloWorld
 app_name = 'emails'
 
 urlpatterns = [

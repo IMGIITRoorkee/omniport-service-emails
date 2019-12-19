@@ -1,22 +1,20 @@
 from django.core.mail import EmailMessage
-from omniport.settings import settings
 
+from omniport.settings import settings
+from kernel.models import Person
 from categories.redisdb import Subscription
 from emails.tasks.push_email import qpush
 
 def email_push(
-        subject,
-        body,
+        subject_text,
+        body_text,
         category,
         by,
         has_custom_user_target=False,
         persons=None,
         ):
 
-    """
-    Todo: fetch emails for persons, fetch email_from
-    """
-
+    email_from = settings.EMAIL_HOST_USER
     if has_custom_user_targets:
         if persons is None:
             raise ValueError(
@@ -24,19 +22,27 @@ def email_push(
                 'is True '
             )
         else:
-            email_from = settings.EMAIL_HOST_USER
-            """html_content = "body_here"
-            html_content.replace("body_here",body)"""
-            msg = EmailMessage(
-                    subject=subject,
-                    body=body,
-                    email_from=email_from,
-                    persons=persons
-            )
-            msg.content_subtype = "html"
-            qpush(msg)
+            for x in persons:
+                p = Person.objects.get(id=x)
+                msg = EmailMessage(
+                    subject=subject_text,
+                    body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text).replace("Sender/Text", p.full_name),
+                    from_email=email_from,
+                    to=[p.contact_information.get().email_address]
+                )
+                msg.content_subtype = "html"
+                qpush(msg)
 
     else:
         category = category.slug
         persons = Subscription.fetch_people(category_slug=category, action='email')
-        send_mass_mail(subject, body, by, persons)
+        for x in persons:
+            p = Person.objects.get(id=x)
+            msg = EmailMessage(
+                subject=subject_text,
+                body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text),
+                from_email=email_from,
+                to=[p.contact_information.get().email_address]
+            )
+            msg.content_subtype = "html"
+            qpush(msg)   
