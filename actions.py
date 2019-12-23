@@ -1,5 +1,5 @@
 from django.core.mail import EmailMessage
-
+from emails.html_content import html_content
 from omniport.settings import settings
 from kernel.models import Person
 from categories.redisdb import Subscription
@@ -13,9 +13,11 @@ def email_push(
         has_custom_user_target=False,
         persons=None,
         ):
+    
+
 
     email_from = settings.EMAIL_HOST_USER
-    if has_custom_user_targets:
+    if has_custom_user_target:
         if persons is None:
             raise ValueError(
                 '\'persons\' cannot be None while \'has_custom_users_target\' '

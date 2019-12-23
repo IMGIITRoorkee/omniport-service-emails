@@ -1,3 +1,10 @@
+from maintainer_site.models.maintainer_group import MaintainerGroup
+main_email=MaintainerGroup.objects.all()[0].contact_information.get().email_address
+main_phone=MaintainerGroup.objects.all()[0].contact_information.get().primary_phone_number
+fac_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='fac').url
+medium_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='med').url
+#insta_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='ins').url
+
 html_content = """
 	<!DOCTYPE html>
 	<html>
@@ -78,12 +85,12 @@ html_content = """
 	display: table-cell;
 	padding: 0 2rem;">
 	<div class='email' style="margin-top: 10px;
-	margin-bottom: 10px;">Email: <a href="mailto:img@iitr.ac.in" style="color:white;">img@iitr.ac.in</a></div>
+	margin-bottom: 10px;">Email: <a href="mailto:MaintainerMail/Text" style="color:white;">MaintainerMail/Text</a></div>
 
 	<div class='phone' style="margin-top: 10px;
-	margin-bottom: 10px;">Phone: 01332-284521</div>
+	margin-bottom: 10px;">Phone: MaintainerPhone/Text</div>
 	<div class='follow' style="margin-top: 10px;
-	margin-bottom: 10px;">Follow us on: <a href="https://www.facebook.com/IMGIITRoorkee/" style="color:#FFFFFF">Facebook</a> <a href="https://medium.com/img-iit-roorkee" style="color:#FFFFFF">Medium</a> <a href="https://www.instagram.com/img_iitr/" style="color:#FFFFFF">Instagram</a></div>
+	margin-bottom: 10px;">Follow us on: <a href="FacebookLink/Text" style="color:#FFFFFF">Facebook</a> <a href="MediumLink/Text" style="color:#FFFFFF">Medium</a> <a href="InstagramLink/Text" style="color:#FFFFFF">Instagram</a></div>
 	</div>
 
 	<div class='logo' style="position: relative;
@@ -101,4 +108,4 @@ html_content = """
 	</html>
 
 
-"""
+""".replace("MaintainerMail/Text",main_email).replace("MaintainerPhone/Text",main_phone).replace("MaintainerEmail/Text", main_email).replace("FacebookLink/Text", fac_link).replace("MediumLink/Text", medium_link)
