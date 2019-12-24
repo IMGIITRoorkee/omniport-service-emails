@@ -3,7 +3,7 @@ main_email=MaintainerGroup.objects.all()[0].contact_information.get().email_addr
 main_phone=MaintainerGroup.objects.all()[0].contact_information.get().primary_phone_number
 fac_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='fac').url
 medium_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='med').url
-#insta_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='ins').url
+insta_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='ins').url
 
 html_content = """
 	<!DOCTYPE html>
@@ -108,4 +108,4 @@ html_content = """
 	</html>
 
 
-""".replace("MaintainerMail/Text",main_email).replace("MaintainerPhone/Text",main_phone).replace("MaintainerEmail/Text", main_email).replace("FacebookLink/Text", fac_link).replace("MediumLink/Text", medium_link)
+""".replace("MaintainerMail/Text",main_email).replace("MaintainerPhone/Text",main_phone).replace("MaintainerEmail/Text", main_email).replace("FacebookLink/Text", fac_link).replace("MediumLink/Text", medium_link).replace("InstagramLink/Text", insta_link)
