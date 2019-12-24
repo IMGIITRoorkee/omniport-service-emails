@@ -1,16 +1,49 @@
 from maintainer_site.models.maintainer_group import MaintainerGroup
-main_email=MaintainerGroup.objects.all()[0].contact_information.get().email_address
-main_phone=MaintainerGroup.objects.all()[0].contact_information.get().primary_phone_number
-fac_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='fac').url
-medium_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='med').url
-insta_link=MaintainerGroup.objects.all()[0].social_information.get().links.all().get(site='ins').url
+
+try:
+    if isinstance(MaintainerGroup.objects.get().contact_information.get().email_address, str):
+        main_email=MaintainerGroup.objects.get().contact_information.get().email_address
+    else:
+        raise Exception("MaintainerGroup's email_address not found")
+except:
+    raise Exception("MaintainerGroup's email_address not found")
+    main_email=''
+
+try:
+    if isinstance(MaintainerGroup.objects.get().contact_information.get().primary_phone_number, str):
+        main_phone=MaintainerGroup.objects.get().contact_information.get().primary_phone_number
+    else:
+        raise Exception("MaintainerGroup's primary_phone_number not found")
+except:
+    raise Exception("MaintainerGroup's primary_phone_number not found")
+    main_phone=''
+
+try:
+    facebook_link=MaintainerGroup.objects.get().social_information.get().links.get(site='fac').url
+    facebook_site='Facebook'
+except:
+    facebook_link=''
+    facebook_site=''
+
+try:
+    medium_link=MaintainerGroup.objects.get().social_information.get().links.get(site='med').url
+    medium_site='Medium'
+except:
+    medium_link=''
+    medium_site=''
+
+try:
+    instagram_link=MaintainerGroup.objects.get().social_information.get().links.get(site='ins').url
+    instagram_site='Instagram'
+except:
+    instagram_link=''
+    instagram_site=''
+
+
 
 html_content = """
 	<!DOCTYPE html>
 	<html>
-	<head>
-	<link rel="stylesheet" type="text/css" href="email3.css">
-	</head>
 	<body style="align-items: center;
 	height: auto;
 	position: relative;
@@ -90,7 +123,7 @@ html_content = """
 	<div class='phone' style="margin-top: 10px;
 	margin-bottom: 10px;">Phone: MaintainerPhone/Text</div>
 	<div class='follow' style="margin-top: 10px;
-	margin-bottom: 10px;">Follow us on: <a href="FacebookLink/Text" style="color:#FFFFFF">Facebook</a> <a href="MediumLink/Text" style="color:#FFFFFF">Medium</a> <a href="InstagramLink/Text" style="color:#FFFFFF">Instagram</a></div>
+	margin-bottom: 10px;">Follow us on: <a href="FacebookLink/Text" style="color:#FFFFFF">FacebookSite/Text</a> <a href="MediumLink/Text" style="color:#FFFFFF">MediumSite/Text</a> <a href="InstagramLink/Text" style="color:#FFFFFF">InstagramSite/Text</a></div>
 	</div>
 
 	<div class='logo' style="position: relative;
@@ -108,4 +141,6 @@ html_content = """
 	</html>
 
 
-""".replace("MaintainerMail/Text",main_email).replace("MaintainerPhone/Text",main_phone).replace("MaintainerEmail/Text", main_email).replace("FacebookLink/Text", fac_link).replace("MediumLink/Text", medium_link).replace("InstagramLink/Text", insta_link)
+""".replace("MaintainerMail/Text",main_email).replace("MaintainerPhone/Text", main_phone).replace("MaintainerEmail/Text", main_email).replace("FacebookLink/Text", facebook_link).replace("FacebookSite/Text", facebook_site).replace("MediumLink/Text", medium_link).replace("MediumSite/Text", medium_site).replace("InstagramLink/Text", instagram_link).replace("InstagramSite/Text", instagram_site)
+
+html_content.replace("Posted", 'abc')

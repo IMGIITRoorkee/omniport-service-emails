@@ -13,17 +13,17 @@ def email_push(
         by,
         has_custom_user_target=False,
         persons=None,
-        targetappname=None,
-        targetappurl=None
+        target_app_name=None,
+        target_app_url=None
         ):
     
-    if targetappname is not None and targetappurl is None:
-        target_name=targetappname
+    if target_app_name is not None and target_app_url is None:
+        target_name=target_app_name
         target_url=''
 
-    elif targetappname is not None and targetappurl is not None:
-        target_name='Open in ' + targetappname
-        target_url=targetappurl
+    elif target_app_name is not None and target_app_url is not None:
+        target_name='Open in ' + target_app_name
+        target_url=target_app_url
 
     else:
         target_name=''
@@ -57,7 +57,7 @@ def email_push(
             p = Person.objects.get(id=x)
             msg = EmailMessage(
                 subject=subject_text,
-                body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text),
+                body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text)..replace("Sender/Text", p.full_name).replace("TargetApp/Text", target_name).replace("TargetURL/Text", target_url).replace("Time/Text", now.strftime("%d %B %Y at %H:%M")),
                 from_email=email_from,
                 to=[p.contact_information.get().email_address]
             )
