@@ -38,7 +38,7 @@ html_content = """
 	color: #FFFFFF;
 	padding: 0.15em 0;font-size: 0.9rem;
 	display: table-cell;
-	vertical-align: middle;">Open in Channel I Noticeboard</span>
+	vertical-align: middle;"><a href='TargetURL/Text' style="color:#FFFFFF">TargetApp/Text</a></span>
 	</div>
 	</div>
 	</div>

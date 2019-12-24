@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from emails.html_content import html_content
-
 class HelloWorld(APIView):
     """
     Returns a success message
@@ -20,18 +19,3 @@ class HelloWorld(APIView):
         """
 
         return HttpResponse(html_content)
-        # response_data = {
-        #     'status': 'SUCCESS',
-        #     'message': (
-        #         'You have successfully initiated email and taken the '
-        #         'first step to building your Omniport app. Edit '
-        #         'views.hello_world and make this app do magical things. We '
-        #         'can\'t wait to see what you make.'
-        #     ),
-        #     'greetings': 'Team Omniport',
-        # }
-        #
-        # return Response(
-        #     data=response_data,
-        #     status=status.HTTP_200_OK
-        # )
