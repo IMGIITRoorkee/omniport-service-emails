@@ -43,7 +43,7 @@ def email_push(
                 p = Person.objects.get(id=x)
                 msg = EmailMessage(                
                     subject=subject_text,
-                    body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text).replace("Sender/Text", p.full_name).replace("TargetApp/Text", target_name).replace("TargetURL/Text", target_url).replace("Time/Text", now.strftime("%d %B %Y at %H:%M")),
+                    body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text).replace("Sender/Text", p.full_name).replace("TargetApp/Text", target_name).replace("TargetURL/Text", target_url).replace("Time/Text", now.strftime("%d %B at %Y %H:%M")),
                     from_email=email_from,
                     to=[p.contact_information.get().email_address]
                 )
@@ -57,7 +57,7 @@ def email_push(
             p = Person.objects.get(id=x)
             msg = EmailMessage(
                 subject=subject_text,
-                body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text)..replace("Sender/Text", p.full_name).replace("TargetApp/Text", target_name).replace("TargetURL/Text", target_url).replace("Time/Text", now.strftime("%d %B %Y at %H:%M")),
+                body=html_content.replace("Subject/Text", subject_text).replace("Body/Text", body_text).replace("Sender/Text", p.full_name).replace("TargetApp/Text", target_name).replace("TargetURL/Text", target_url).replace("Time/Text", now.strftime("%d %B %Y at %H:%M")),
                 from_email=email_from,
                 to=[p.contact_information.get().email_address]
             )

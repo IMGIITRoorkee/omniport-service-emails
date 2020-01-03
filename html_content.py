@@ -1,21 +1,13 @@
 from maintainer_site.models.maintainer_group import MaintainerGroup
 
-try:
-    if isinstance(MaintainerGroup.objects.get().contact_information.get().email_address, str):
-        main_email=MaintainerGroup.objects.get().contact_information.get().email_address
-    else:
-        raise Exception("MaintainerGroup's email_address not found")
-except:
-    raise Exception("MaintainerGroup's email_address not found")
+if isinstance(MaintainerGroup.objects.get().contact_information.get().email_address, str):
+    main_email=MaintainerGroup.objects.get().contact_information.get().email_address
+else:
     main_email=''
 
-try:
-    if isinstance(MaintainerGroup.objects.get().contact_information.get().primary_phone_number, str):
-        main_phone=MaintainerGroup.objects.get().contact_information.get().primary_phone_number
-    else:
-        raise Exception("MaintainerGroup's primary_phone_number not found")
-except:
-    raise Exception("MaintainerGroup's primary_phone_number not found")
+if isinstance(MaintainerGroup.objects.get().contact_information.get().primary_phone_number, str):
+    main_phone=MaintainerGroup.objects.get().contact_information.get().primary_phone_number
+else:
     main_phone=''
 
 try:
