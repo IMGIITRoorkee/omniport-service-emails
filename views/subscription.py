@@ -1,9 +1,10 @@
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from categories.models import UserSubscription, Category
-from categories.serializers import CategorySerializer, SubscriptionTreeSerializer
+from categories.serializers import SubscriptionTreeSerializer
 
 
 class Subscription(APIView):
@@ -27,7 +28,7 @@ class Subscription(APIView):
                     'success': False,
                     'error': 'Invalid payload'
                 },
-                status=400
+                status=status.HTTP_400_BAD_REQUEST
             )
 
         for category in new_subscriptions:
@@ -48,5 +49,5 @@ class Subscription(APIView):
             data={
                 'success': True,
             },
-            status=200
+            status=status.HTTP_201_CREATED
         )
