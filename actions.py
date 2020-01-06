@@ -2,8 +2,8 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from django.conf import settings
 from kernel.models import Person
-from categories.redisdb import Subscription
 
+from categories.redisdb import Subscription
 from emails.html_content import html_content
 from emails.utils.get_person_contact import get_person_contact
 from emails.tasks.push_email import qpush
@@ -54,10 +54,10 @@ def email_push(
                     pass
 
                 if p:
-                    to = [get_person_contact(p, use_custom_email, check_if_verified)]
+                    recipient = [get_person_contact(p, use_custom_email, check_if_verified)]
 
         elif persons is None and email_ids is not None:
-            to = email_ids
+            recipient = email_ids
 
         else:
             raise ValueError(
@@ -76,7 +76,7 @@ def email_push(
                 pass
 
             if p:
-                to = [get_person_contact(p, use_custom_email, check_if_verified)]
+                recipient = [get_person_contact(p, use_custom_email, check_if_verified)]
 
     msg = EmailMessage(
         subject=subject_text,
@@ -84,7 +84,7 @@ def email_push(
             "TargetApp/Text", target_name).replace("TargetURL/Text", target_url).replace("Time/Text", now.strftime(
             "%d %B %Y at %H:%M")),
         from_email=email_from,
-        to=to
+        to=recipient
     )
     msg.content_subtype = "html"
     qpush(msg)

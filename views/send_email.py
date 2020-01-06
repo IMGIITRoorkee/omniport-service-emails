@@ -8,7 +8,7 @@ from emails.actions import email_push
 class SendEmail(APIView):
 
     def post(self, request):
-        token = self.request.data(['token'])
+        token = self.request.data['token']
 
         category = Category.objects.get(slug=self.request.data['slug'])
         if category.meta['token']==token:
@@ -21,17 +21,9 @@ class SendEmail(APIView):
                 by=None
 
             try:
-               # if self.request.data['hasCustomUserTarget']
-                has_custom_user_target = self.request.data['hasCustomUserTarget']
+                email_ids = self.request.data['email_ids']
             except:
-                has_custom_user_target=True
-            
-
-            try:
-                persons = self.request.data['persons']
-            except:
-                persons=None
-
+                email_ids=None
 
             try:
                 target_app_name = self.request.data['targetAppName']
@@ -55,5 +47,20 @@ class SendEmail(APIView):
             except:
                 use_custom_email=False
 
-            email_push(subject, body, category, by, has_custom_user_target, persons, target_app_name, target_app_url, use_custom_email)
-            #return Response(self)
+            try:
+                check_if_verified = self.request.data['check_if_verified']
+            except:
+                check_if_verified=False
+            if email_ids:
+                email_push(subject,
+                           body,
+                           None,
+                           True,
+                           None,
+                           email_ids,
+                           by,
+                           use_custom_email,
+                           check_if_verified,
+                           target_app_name,
+                           target_app_url)
+#return Response(self)
