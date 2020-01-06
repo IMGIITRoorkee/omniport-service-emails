@@ -1,6 +1,0 @@
-{
-  "python.pythonPath": "env/bin/python3.7",
-  "python.linting.pep8Enabled": true,
-"python.linting.pylintEnabled": true,
-"python.linting.enabled": true
-}
