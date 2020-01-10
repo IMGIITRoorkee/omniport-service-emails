@@ -8,16 +8,32 @@ from categories.serializers import SubscriptionTreeSerializer
 
 
 class Subscription(APIView):
-
+    """
+    Handle email subscription
+    """
     permission_classes = [IsAuthenticated, ]
     
     def get(self, request, *args, **kwargs):
+        """
+        Fetch email subscription tree of the user
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
 
         roots = Category.objects.root_nodes()
         serializer = SubscriptionTreeSerializer(roots, many=True)
         return Response(serializer.data)
     
     def post(self, request, *args, **kwargs):
+        """
+        Update email subscription tree of the user
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
       
         try:
             new_subscriptions = request.data['save']

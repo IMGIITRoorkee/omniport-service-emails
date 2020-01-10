@@ -1,6 +1,4 @@
 from omniport.celery import celery_app
-from django.core.mail import send_mass_mail
-from django.core.mail import EmailMessage
 
 
 @celery_app.task(
@@ -8,5 +6,10 @@ from django.core.mail import EmailMessage
     autoretry_for=(Exception,),
     retry_kwargs={'max_retries': 5}
 )
-def qpush(EmailMessage):
-    EmailMessage.send()
+def queue_push(email_message):
+    """
+    Batch-wise pushing emails using message-broker
+    :param email_message: EmailMessage instance to be sent
+    :return: success/failure as 1 or 0
+    """
+    return email_message.send()
