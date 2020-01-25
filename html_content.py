@@ -1,10 +1,9 @@
 import re
 from maintainer_site.models.maintainer_group import MaintainerGroup
 
-maintainer = MaintainerGroup.objects.filter().first()
-
 
 def get_html_content():
+    maintainer = MaintainerGroup.objects.filter().first()
     if maintainer is None:
         return None
     else:

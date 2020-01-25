@@ -82,13 +82,14 @@ def email_push(
             use_custom_email,
             check_if_verified
         )
-    if get_html_content() is not None:
+    html_content = get_html_content()
+    if html_content is not None:
         if by is not None:
             sender = Person.objects.get(id=by).full_name
-            html_content_mod = get_html_content().replace("Sender", sender)
+            html_content_mod = html_content.replace("Sender", sender)
         else:
             sender = ''
-            html_content_mod = get_html_content().replace(
+            html_content_mod = html_content.replace(
                 "<b>Posted By:</b> Sender", sender
             )
         for recipient in recipients:
