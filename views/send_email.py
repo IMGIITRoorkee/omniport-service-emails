@@ -37,17 +37,11 @@ class SendEmail(APIView):
 
             if email_ids:
                 return Response(
-                    email_push(
-                        subject_text=subject,
-                        body_text=body,
-                        category=None,
-                        has_custom_user_target=True,
-                        persons=None,
-                        email_ids=email_ids,
-                        by=by,
-                        use_custom_email=use_custom_email,
-                        check_if_verified=check_if_verified,
-                        target_app_name=target_app_name,
-                        target_app_url=target_app_url
-                    )
+                    email_push(subject_text=subject, body_text=body,
+                               category=None, has_custom_user_target=True,
+                               persons=None, email_ids=email_ids, by=by,
+                               use_primary_email=use_custom_email,
+                               check_if_primary_email_verified=check_if_verified,
+                               target_app_name=target_app_name,
+                               target_app_url=target_app_url)
                 )

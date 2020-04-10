@@ -10,19 +10,10 @@ from emails.utils.get_people_contact import get_people_contact
 from emails.tasks.push_email import queue_push
 
 
-def email_push(
-        subject_text,
-        body_text,
-        category,
-        has_custom_user_target=False,
-        persons=None,
-        email_ids=None,
-        by=None,
-        use_custom_email=False,
-        check_if_verified=False,
-        target_app_name=None,
-        target_app_url=None,
-):
+def email_push(subject_text, body_text, category, has_custom_user_target=False,
+               persons=None, email_ids=None, by=None, use_primary_email=False,
+               check_if_primary_email_verified=False, target_app_name=None,
+               target_app_url=None):
     """
     TODO
     :param subject_text: subject of the email to be sent
@@ -32,8 +23,8 @@ def email_push(
     :param persons: ids of the persons to whom it is to be sent
     :param email_ids: email ids of the persons to whom it is to be sent
     :param by: id of the person who is posting the mail
-    :param use_custom_email: Boolean for whether to use custom email address
-    :param check_if_verified: Boolean for whether to check email verification
+    :param use_primary_email: Boolean for whether to use custom email address
+    :param check_if_primary_email_verified: Boolean for whether to check email verification
     :param target_app_name: name of a target app to be passed
     :param target_app_url: url of a link from the target app
     :return: response of the request
@@ -60,8 +51,8 @@ def email_push(
         if persons is not None:
             recipients = get_people_contact(
                 persons,
-                use_custom_email,
-                check_if_verified
+                use_primary_email,
+                check_if_primary_email_verified
             )
         elif email_ids is not None:
             recipients = email_ids
@@ -79,8 +70,8 @@ def email_push(
         )
         recipients = get_people_contact(
             persons,
-            use_custom_email,
-            check_if_verified
+            use_primary_email,
+            check_if_primary_email_verified
         )
     html_content = get_html_content()
     if html_content is not None:
