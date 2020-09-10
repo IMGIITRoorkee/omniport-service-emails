@@ -32,8 +32,8 @@ class SendEmail(APIView):
                 'targetAppUrl',
                 category.meta.get('targetAppUrl', None)
             )
-            use_custom_email = self.request.data.get('useCustomEmail', False)
-            check_if_verified = self.request.data.get('checkIfVerified', False)
+            use_primary_email = self.request.data.get('useCustomEmail', False)
+            check_if_primary_email_verified = self.request.data.get('checkIfVerified', False)
 
             if email_ids:
                 return Response(
@@ -45,8 +45,8 @@ class SendEmail(APIView):
                         persons=None,
                         email_ids=email_ids,
                         by=by,
-                        use_custom_email=use_custom_email,
-                        check_if_verified=check_if_verified,
+                        use_primary_email=use_primary_email,
+                        check_if_primary_email_verified=check_if_primary_email_verified,
                         target_app_name=target_app_name,
                         target_app_url=target_app_url
                     )

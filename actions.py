@@ -18,8 +18,8 @@ def email_push(
         persons=None,
         email_ids=None,
         by=None,
-        use_custom_email=False,
-        check_if_verified=False,
+        use_primary_email=False,
+        check_if_primary_email_verified=False,
         target_app_name=None,
         target_app_url=None,
 ):
@@ -32,8 +32,8 @@ def email_push(
     :param persons: ids of the persons to whom it is to be sent
     :param email_ids: email ids of the persons to whom it is to be sent
     :param by: id of the person who is posting the mail
-    :param use_custom_email: Boolean for whether to use custom email address
-    :param check_if_verified: Boolean for whether to check email verification
+    :param use_primary_email: Boolean for whether to use custom email address
+    :param check_if_primary_email_verified: Boolean for whether to check email verification
     :param target_app_name: name of a target app to be passed
     :param target_app_url: url of a link from the target app
     :return: response of the request
@@ -51,17 +51,15 @@ def email_push(
         target_name = ''
         target_url = ''
 
-    email_from = settings.EMAIL_HOST_USER
-    logo_data = open('../branding/maintainers/logo.png', 'rb').read()
-    logo = MIMEImage(logo_data)
-    logo.add_header('Content-ID', '<logo>')
+    from_email = (f'{settings.SITE.nomenclature.verbose_name} '
+                  f'<{settings.EMAIL_HOST_USER}>')
 
     if has_custom_user_target:
         if persons is not None:
             recipients = get_people_contact(
                 persons,
-                use_custom_email,
-                check_if_verified
+                use_primary_email,
+                check_if_primary_email_verified
             )
         elif email_ids is not None:
             recipients = email_ids
@@ -79,36 +77,36 @@ def email_push(
         )
         recipients = get_people_contact(
             persons,
-            use_custom_email,
-            check_if_verified
+            use_primary_email,
+            check_if_primary_email_verified
         )
     html_content = get_html_content()
     if html_content is not None:
         if by is not None:
             sender = Person.objects.get(id=by).full_name
-            html_content_mod = html_content.replace("Sender", sender)
+            html_content = html_content.replace('Sender', sender)
         else:
             sender = ''
-            html_content_mod = html_content.replace(
-                "<b>Posted By:</b> Sender", sender
+            html_content = html_content.replace(
+                '<b>Posted By:</b> Sender', sender
             )
+        body = html_content.replace(
+            'Subject', subject_text
+        ).replace(
+            'Body', body_text
+        ).replace(
+            'TargetApp', target_name
+        ).replace(
+            'TargetURL', target_url
+        ).replace(
+            'Time', datetime.now().strftime('%d %B %Y at %H:%M')
+        )
+
         for recipient in recipients:
-            msg = EmailMessage(
-                subject=subject_text,
-                body=html_content_mod.replace(
-                    "Subject", subject_text
-                ).replace(
-                    "Body", body_text
-                ).replace(
-                    "TargetApp", target_name
-                ).replace(
-                    "TargetURL", target_url
-                ).replace(
-                    "Time", datetime.now().strftime("%d %B %Y at %H:%M")
-                ),
-                from_email=email_from,
-                to=[recipient]
+            queue_push.delay(
+                subject_text,
+                body,
+                from_email,
+                recipient,
             )
-            msg.content_subtype = "html"
-            msg.attach(logo)
-            return queue_push(msg)
+
