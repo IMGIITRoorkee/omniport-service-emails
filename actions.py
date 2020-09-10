@@ -51,7 +51,8 @@ def email_push(
         target_name = ''
         target_url = ''
 
-    from_email = settings.EMAIL_HOST_USER
+    from_email = (f'{settings.SITE.nomenclature.verbose_name} '
+                  f'<{settings.EMAIL_HOST_USER}>')
 
     if has_custom_user_target:
         if persons is not None:

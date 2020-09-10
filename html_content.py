@@ -5,12 +5,13 @@ from maintainer_site.models.maintainer_group import MaintainerGroup
 def get_html_content():
     maintainer = MaintainerGroup.objects.filter().first()
     if maintainer is None:
+        print('Maintainer Group is not present')
         return None
     else:
         contact_info = maintainer.contact_information.filter()
         social_info = maintainer.social_information.filter()
         replacements = {
-            'MaintainerMail': contact_info.get().email_address,
+            'MaintainerMail': contact_info.get().institute_webmail_address,
             'MaintainerPhone': contact_info.get().primary_phone_number,
         }
 
