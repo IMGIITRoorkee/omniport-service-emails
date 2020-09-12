@@ -4,10 +4,11 @@ from email.mime.image import MIMEImage
 
 from omniport.celery import celery_app
 
+celery_app.control.add_consumer('emails', reply=True) # Create separate queue for email task
 
 @celery_app.task(
-    queue='celery',
-    autoretry_for=(Exception,),
+    queue='emails',
+    autoretry_for=(Exception,),   
     retry_kwargs={'max_retries': 5}
 )
 def queue_push(subject, body, from_email, recipient):
