@@ -5,6 +5,8 @@ from email.mime.image import MIMEImage
 
 from kernel.models import Person
 from categories.redisdb import Subscription
+from categories.models import UserSubscription
+
 from emails.html_content import get_html_content
 from emails.utils.get_people_contact import get_people_contact
 from emails.tasks.push_email import queue_push
@@ -22,6 +24,7 @@ def email_push(
         check_if_primary_email_verified=False,
         target_app_name=None,
         target_app_url=None,
+        send_only_to_subscribed_users=False
 ):
     """
     TODO
@@ -36,6 +39,7 @@ def email_push(
     :param check_if_primary_email_verified: Boolean for whether to check email verification
     :param target_app_name: name of a target app to be passed
     :param target_app_url: url of a link from the target app
+    :param send_only_to_subscribed_users: Flag for a notification only to be sent to subscribed users
     :return: response of the request
     """
 
@@ -56,11 +60,19 @@ def email_push(
 
     if has_custom_user_target:
         if persons is not None:
+
+            if send_only_to_subscribed_users:
+                persons = UserSubscription.objects.filter(
+                    category=category
+                ).filter(person__id__in=persons)\
+                    .values_list('person_id', flat=True)
+
             recipients = get_people_contact(
                 persons,
                 use_primary_email,
                 check_if_primary_email_verified
             )
+
         elif email_ids is not None:
             recipients = email_ids
         else:
