@@ -64,7 +64,9 @@ def email_push(
             if send_only_to_subscribed_users:
                 persons = UserSubscription.objects.filter(
                     category=category
-                ).filter(person__id__in=persons)\
+                ).filter(
+                    person__id__in=persons
+                ).filter(action='email')\
                     .values_list('person_id', flat=True)
 
             recipients = get_people_contact(
