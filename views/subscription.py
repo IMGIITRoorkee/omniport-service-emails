@@ -41,7 +41,7 @@ class Subscription(APIView):
       
         try:
             new_subscriptions = request.data['save']
-            new_unsubscription = request.data['delete']
+            new_unsubscription = request.data['drop']
         except KeyError:
             logger.error(
                 f'Post request sent by {self.request.person} '
@@ -58,15 +58,15 @@ class Subscription(APIView):
         for category in new_subscriptions:
             _ = UserSubscription(
                 person=request.person,
-                category=category,
-                action='email',
+                category=Category.objects.get(slug=category),
+                action='emails',
             ).subscribe()
 
         for category in new_unsubscription:
             _ = UserSubscription(
                 person=request.person,
-                category=category,
-                action='email',
+                category=Category.objects.get(slug=category),
+                action='emails',
             ).unsubscribe()
         logger.info(
             'Successfully updated the email subscriptions for '
