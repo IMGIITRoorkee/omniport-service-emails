@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from categories.models import UserSubscription, Category
 from categories.serializers import SubscriptionTreeSerializer
+from emails.utils.get_subscription import get_subscription
 
 logger = logging.getLogger('emails')
 
@@ -38,7 +39,7 @@ class Subscription(APIView):
         :param kwargs:
         :return:
         """
-      
+
         try:
             new_subscriptions = request.data['save']
             new_unsubscription = request.data['drop']
@@ -54,27 +55,25 @@ class Subscription(APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-        for category_slug in new_subscriptions:
-            category = Category.objects.get(slug=category_slug)
-            try:
-                UserSubscription.objects.get(
-                    person=request.person,
-                    category=category,
-                    action='emails')
-            except UserSubscription.DoesNotExist:
-                _ = UserSubscription(
-                    person=request.person,
-                    category=category,
-                    action='emails',
-                ).subscribe()
-
-        for category in new_unsubscription:
+        subscribe, unsubscribe = get_subscription(new_subscriptions,
+                                                  new_unsubscription,
+                                                  request.person,
+                                                  'emails').get_should_subscribe()
+        for category in unsubscribe:
             _ = UserSubscription(
                 person=request.person,
                 category=Category.objects.get(slug=category),
                 action='emails',
             ).unsubscribe()
+        for category_slug in subscribe:
+            category = Category.objects.get(slug=category_slug)
+
+            _ = UserSubscription(
+                person=request.person,
+                category=Category.objects.get(slug=category_slug),
+                action='emails',
+            ).subscribe()
+
         logger.info(
             'Successfully updated the email subscriptions for '
             f'{self.request.person}'
