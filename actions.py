@@ -1,13 +1,15 @@
-from datetime import datetime
-from django.core.mail import EmailMessage
-from django.conf import settings
-from email.mime.image import MIMEImage
+import swapper
 
-from kernel.models import Person
+from datetime import datetime
+from django.conf import settings
+
 from categories.redisdb import Subscription
+
 from emails.html_content import get_html_content
 from emails.utils.get_people_contact import get_people_contact
 from emails.tasks.push_email import queue_push
+
+Person = swapper.load_model('kernel', 'Person')
 
 
 def email_push(
@@ -22,6 +24,7 @@ def email_push(
         check_if_primary_email_verified=False,
         target_app_name=None,
         target_app_url=None,
+        send_only_to_subscribed_users=False
 ):
     """
     TODO
@@ -36,6 +39,7 @@ def email_push(
     :param check_if_primary_email_verified: Boolean for whether to check email verification
     :param target_app_name: name of a target app to be passed
     :param target_app_url: url of a link from the target app
+    :param send_only_to_subscribed_users: Flag for a notification only to be sent to subscribed users
     :return: response of the request
     """
 
@@ -56,11 +60,30 @@ def email_push(
 
     if has_custom_user_target:
         if persons is not None:
+            persons = [
+                person.id if isinstance(person, Person) else person
+                for person in persons
+            ]
+
+            if send_only_to_subscribed_users:
+                # Get a set of all subscribed people ids
+                subscribed_persons = {
+                    int(person_id) for person_id in
+                    Subscription.fetch_people(
+                        category_slug=category.slug,
+                        action='email'
+                    )
+                }
+
+                # Grab an intersection of the subscribed people and the complete list
+                persons = list(subscribed_persons.intersection(persons))
+
             recipients = get_people_contact(
                 persons,
                 use_primary_email,
                 check_if_primary_email_verified
             )
+
         elif email_ids is not None:
             recipients = email_ids
         else:
@@ -109,4 +132,3 @@ def email_push(
                 from_email,
                 recipient,
             )
-
