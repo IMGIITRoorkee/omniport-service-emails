@@ -9,7 +9,6 @@ from emails.html_content import get_html_content
 from emails.utils.get_people_contact import get_people_contact
 from emails.tasks.push_email import queue_push
 
-
 Person = swapper.load_model('kernel', 'Person')
 
 
