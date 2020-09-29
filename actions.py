@@ -71,7 +71,7 @@ def email_push(
                     int(person_id) for person_id in
                     Subscription.fetch_people(
                         category_slug=category.slug,
-                        action='email'
+                        action='emails'
                     )
                 }
 
@@ -96,7 +96,7 @@ def email_push(
     else:
         persons = Subscription.fetch_people(
             category_slug=category.slug,
-            action='email'
+            action='emails'
         )
         recipients = get_people_contact(
             persons,
