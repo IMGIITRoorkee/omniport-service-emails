@@ -1,15 +1,16 @@
-from datetime import datetime
-from django.core.mail import EmailMessage
-from django.conf import settings
-from email.mime.image import MIMEImage
+import swapper
 
-from kernel.models import Person
+from datetime import datetime
+from django.conf import settings
+
 from categories.redisdb import Subscription
-from categories.models import UserSubscription
 
 from emails.html_content import get_html_content
 from emails.utils.get_people_contact import get_people_contact
 from emails.tasks.push_email import queue_push
+
+
+Person = swapper.load_model('kernel', 'Person')
 
 
 def email_push(
@@ -60,14 +61,23 @@ def email_push(
 
     if has_custom_user_target:
         if persons is not None:
+            persons = [
+                person.id if isinstance(person, Person) else person
+                for person in persons
+            ]
 
             if send_only_to_subscribed_users:
-                persons = UserSubscription.objects.filter(
-                    category=category
-                ).filter(
-                    person__id__in=persons
-                ).filter(action='email')\
-                    .values_list('person_id', flat=True)
+                # Get a set of all subscribed people ids
+                subscribed_persons = {
+                    int(person_id) for person_id in
+                    Subscription.fetch_people(
+                        category_slug=category.slug,
+                        action='email'
+                    )
+                }
+
+                # Grab an intersection of the subscribed people and the complete list
+                persons = list(subscribed_persons.intersection(persons))
 
             recipients = get_people_contact(
                 persons,
@@ -123,4 +133,3 @@ def email_push(
                 from_email,
                 recipient,
             )
-
