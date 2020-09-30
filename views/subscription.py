@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 
 from categories.models import UserSubscription, Category
 from categories.serializers import SubscriptionTreeSerializer
-from categories.utils.get_subscription import getSubscription
+from categories.utils.get_subscription import GetSubscription
 
 logger = logging.getLogger('emails')
 
@@ -55,10 +55,13 @@ class Subscription(APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
-        subscribe, unsubscribe = getSubscription(new_subscriptions,
-                                                  new_unsubscription,
-                                                  request.person,
-                                                  'emails').get_should_subscribe()
+        subscribe,unsubscribe = GetSubscription(
+                                new_subscriptions,
+                                new_unsubscription,
+                                request.person,
+                                'notifications'
+                            ).get_should_subscribe()
+
         for category in unsubscribe:
             _ = UserSubscription(
                 person=request.person,
