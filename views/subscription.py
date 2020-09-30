@@ -59,7 +59,7 @@ class Subscription(APIView):
                                 new_subscriptions,
                                 new_unsubscription,
                                 request.person,
-                                'notifications'
+                                'emails'
                             ).get_should_subscribe()
 
         for category in unsubscribe:
