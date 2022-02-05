@@ -16,6 +16,7 @@ def email_push(
         subject_text,
         body_text,
         category,
+        attachment_paths=None,
         has_custom_user_target=False,
         persons=None,
         email_ids=None,
@@ -31,6 +32,7 @@ def email_push(
     :param subject_text: subject of the email to be sent
     :param body_text: body of the email to be sent
     :param category: category of subscription
+    :param attachment_paths: list of paths of attachments to the email to be sent
     :param has_custom_user_target: Boolean for whether
     :param persons: ids of the persons to whom it is to be sent
     :param email_ids: email ids of the persons to whom it is to be sent
@@ -131,4 +133,5 @@ def email_push(
                 body,
                 from_email,
                 recipient,
+                attachment_paths,
             )

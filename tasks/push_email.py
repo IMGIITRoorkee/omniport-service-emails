@@ -11,7 +11,7 @@ celery_app.control.add_consumer('emails', reply=True) # Create separate queue fo
     autoretry_for=(Exception,),   
     retry_kwargs={'max_retries': 5}
 )
-def queue_push(subject, body, from_email, recipient):
+def queue_push(subject, body, from_email, recipient, attachment_paths=None):
     """
     Batch-wise pushing emails using message-broker
     :param email_message: EmailMessage instance to be sent
@@ -32,6 +32,11 @@ def queue_push(subject, body, from_email, recipient):
         to=[recipient]
     )
     email_message.content_subtype = "html"
+
+    if(attachment_paths):
+        for attachment_path in attachment_paths:
+            email_message.attach_file(attachment_path)
+            
     email_message.attach(logo)
 
     return email_message.send()
