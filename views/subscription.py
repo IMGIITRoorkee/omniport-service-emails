@@ -62,19 +62,38 @@ class Subscription(APIView):
                                 'emails'
                             ).get_should_subscribe()
 
+        failures = list()
+
         for category in unsubscribe:
-            _ = UserSubscription(
+            if not UserSubscription(
                 person=request.person,
                 category=category,
                 action='emails',
-            ).unsubscribe()
-            
+            ).unsubscribe():
+                failures.append(category.slug)
+
         for category in subscribe:
-            _ = UserSubscription(
+            if not UserSubscription(
                 person=request.person,
                 category=category,
                 action='emails',
-            ).subscribe()
+            ).subscribe():
+                failures.append(category.slug)
+
+        # Safe for the caller to retry: both calls are idempotent
+        if failures:
+            logger.error(
+                'Failed to update the email subscriptions of '
+                f'{self.request.person} for the categories {failures}'
+            )
+            return Response(
+                data={
+                    'success': False,
+                    'error': 'Some subscriptions could not be updated',
+                    'failed': failures,
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
         logger.info(
             'Successfully updated the email subscriptions for '
